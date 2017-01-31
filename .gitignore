@@ -17,3 +17,6 @@ coverage
 logs
 *.log
 npm-debug.log*
+
+# WebPack
+webpack-assets.json
