@@ -7,12 +7,12 @@
     "build": "webpack --verbose --colors --display-error-details --config webpack/prod.config.js",
     "postinstall": "npm run build",
     "dev": "concurrently --kill-others \"npm run dev-api\" \"npm run dev-server\" \"npm run webpack-dev-server\"",
-    "dev-api": "NODE_ENV=development nodemon --exec babel-node ./bin/api.js",
-    "dev-server": "NODE_ENV=development nodemon --exec babel-node ./bin/server.js",
-    "webpack-dev-server": "NODE_ENV=development babel-node ./bin/webpack-dev-server.js",
+    "dev-api": "NODE_ENV=development nodemon --exec babel-node ./server/api.js",
+    "dev-server": "NODE_ENV=development nodemon --exec babel-node ./server/server.js",
+    "webpack-dev-server": "NODE_ENV=development babel-node ./server/webpack-dev-server.js",
     "start": "concurrently --kill-others \"npm run start-api\" \"npm run start-server\"",
-    "start-api": "NODE_ENV=production babel-node ./bin/api.js",
-    "start-server": "NODE_ENV=production babel-node ./bin/server.js",
+    "start-api": "NODE_ENV=production babel-node ./server/api.js",
+    "start-server": "NODE_ENV=production babel-node ./server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

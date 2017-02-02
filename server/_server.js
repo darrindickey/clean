@@ -14,8 +14,10 @@ import {
   createStore,
 } from '../src/redux/createStore';
 import getRoutes from '../src/routes';
+import mysql from 'mysql';
 import Default from '../src/layouts/Default';
 import { port, apiHost, apiPort } from '../config/env';
+import Config from '../config/db-config';
 
 const targetUrl = `http://${apiHost}:${apiPort}`;
 const pretty = new PrettyError();
@@ -27,6 +29,24 @@ const proxy = httpProxy.createProxyServer({
 });
 
 global.__CLIENT__ = false; // eslint-disable-line
+
+var connection = mysql.createConnection({
+  host      : Config.DB_HOST,
+  user      : Config.USER,
+  password  : Config.PASSWORD,
+  database  : Config.DATABASE
+});
+
+connection.connect();
+
+connection.query('SELECT * from users', function(err, rows, fields) {
+  if (!err)
+    console.log('The solution is: ', rows);
+  else
+    console.log('Error while performing Query.');
+});
+
+connection.end();
 
 app.use('/', express.static(path.resolve(__dirname, '../public')));
 

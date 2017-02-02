@@ -20,3 +20,6 @@ npm-debug.log*
 
 # WebPack
 webpack-assets.json
+
+# Configs
+config
