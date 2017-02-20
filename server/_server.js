@@ -14,10 +14,14 @@ import {
   createStore,
 } from '../src/redux/createStore';
 import getRoutes from '../src/routes';
-import mysql from 'mysql';
 import Default from '../src/layouts/Default';
 import { port, apiHost, apiPort } from '../config/env';
 import Config from '../config/db-config';
+import SeverConfig from '../config/server-config';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import passport from 'passport';
 
 const targetUrl = `http://${apiHost}:${apiPort}`;
 const pretty = new PrettyError();
@@ -30,29 +34,23 @@ const proxy = httpProxy.createProxyServer({
 
 global.__CLIENT__ = false; // eslint-disable-line
 
-var connection = mysql.createConnection({
-  host      : Config.DB_HOST,
-  user      : Config.USER,
-  password  : Config.PASSWORD,
-  database  : Config.DATABASE
-});
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(session({ secret: 'ServerConfig.session_secret', saveUninitialized: true, resave: true }));
 
-connection.connect();
-
-connection.query('SELECT * from users', function(err, rows, fields) {
-  if (!err)
-    console.log('The solution is: ', rows);
-  else
-    console.log('Error while performing Query.');
-});
-
-connection.end();
+app.use(passport.initialize());
+app.use(passport.session());    // Required for persistent login sessions (optional, but recommended)
 
 app.use('/', express.static(path.resolve(__dirname, '../public')));
 
 app.use('/api', (req, res) => {
   proxy.web(req, res, { target: `${targetUrl}/api` });
 });
+
+// app.get('/signup', (req, res) => {
+//   proxy.web(req, res, { target: `${targetUrl}/signup` });
+// });
 
 server.on('upgrade', (req, socket, head) => {
   proxy.ws(req, socket, head);
@@ -76,6 +74,7 @@ app.use((req, res) => {
   const history = syncHistoryWithStore(memoryHistory, store);
 
   function hydrateOnClient() {
+    console.log('hydrated')
     res.send(`<!doctype html>${ReactDOM.renderToString(<Default assets={webpackIsomorphicTools.assets()} store={store} />)}`);
   }
 
