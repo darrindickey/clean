@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const assetsPath = path.resolve(__dirname, '../public/assets');
+const assetsPath = path.resolve(__dirname, '/public/assets');
 const { webpackHost, webpackPort } = require('../config/env');
 const webpackIsomorphicToolsConfig = require('./webpack-isomorphic-tools');
 const WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
@@ -82,6 +82,6 @@ module.exports = {
         NODE_ENV: '"development"',
       },
     }),
-    webpackIsomorphicToolsPlugin.development(),
+    // webpackIsomorphicToolsPlugin.development(),
   ],
 };
